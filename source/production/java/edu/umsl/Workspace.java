@@ -44,7 +44,7 @@ public class Workspace {
         do {
 
             // This if statement is used to get input from the user if the last value input is outside the accepted range
-            if(hour < 0 || hour >= 24) {
+            if(hour < 0 || hour > 24) {
                 // this try catch block is used to catch exceptions thrown if the user inputs invalid data
                 try {
                     hour = userInput.nextInt();                                                                         //accepts input from the user
@@ -65,14 +65,14 @@ public class Workspace {
             }
 
             // if both the hours and minutes were input incorrectly the user is notified of the mistake
-            if((hour < 0 || hour >= 24) && (minute < 0 || minute > 59)){
+            if((hour < 0 || hour > 24) && (minute < 0 || minute > 59)){
                 if(hour != NO_INPUT && minute != NO_INPUT){ // if the user entered an integer but it was incorrect
                     System.out.println("Invalid input: Hour = " + hour + " Minute = " + minute );
                 }
                 System.out.println("Please enter a valid Hour between 0 and 23\nPlease enter a valid Minute between 0 and 59");
             }else{// if the user only made one mistake in their input this else statement will execute
                 //if the user entered a hour outside the accepted value they will be notified
-                if (hour < 0 || hour >= 24 ) {
+                if (hour < 0 || hour > 24 ) {
                     if( hour != NO_INPUT){ // if the user entered an integer but it was incorrect
                         System.out.println("Invalid input: Hour = " + hour);
                     }
