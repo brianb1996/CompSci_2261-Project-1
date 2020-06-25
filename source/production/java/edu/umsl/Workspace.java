@@ -97,6 +97,9 @@ public class Workspace {
         if(minute < 45){
             minute = minute + 15;
             hour--;
+            if(hour < 0){
+                hour = 23;
+            }
         }else{
             minute = minute - 45;
         }
