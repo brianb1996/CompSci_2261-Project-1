@@ -37,9 +37,9 @@ public class Workspace {
         System.out.println("Hours: 0 to 23, Minutes: 0 to 59");
 
         final int NO_INPUT = -9999;
-        int hour = NO_INPUT;                                                                                                  //used to store the hour input by the user
-        int minute = NO_INPUT;                                                                                              //used to store the minute input by the user
-        String errorCatcher;
+        int hour = NO_INPUT;                                                                                            //used to store the hour input by the user
+        int minute = NO_INPUT;                                                                                          //used to store the minute input by the user
+        String errorCatcher;                                                                                            //used to store store the users incorrect input
         //This do while loop is used to catch input from the user outside the accepted range
         do {
 
@@ -66,21 +66,21 @@ public class Workspace {
 
             // if both the hours and minutes were input incorrectly the user is notified of the mistake
             if((hour < 0 || hour >= 24) && (minute < 0 || minute > 59)){
-                if(hour != NO_INPUT && minute != NO_INPUT){ // if the user enter data but it was incorrect
+                if(hour != NO_INPUT && minute != NO_INPUT){ // if the user entered an integer but it was incorrect
                     System.out.println("Invalid input: Hour = " + hour + " Minute = " + minute );
                 }
                 System.out.println("Please enter a valid Hour between 0 and 23\nPlease enter a valid Minute between 0 and 59");
             }else{// if the user only made one mistake in their input this else statement will execute
                 //if the user entered a hour outside the accepted value they will be notified
                 if (hour < 0 || hour >= 24 ) {
-                    if( hour != NO_INPUT){
+                    if( hour != NO_INPUT){ // if the user entered an integer but it was incorrect
                         System.out.println("Invalid input: Hour = " + hour);
                     }
                     System.out.println("Please enter a valid hour between 0 and 23");
                 }
                 //if the user entered a minute outside the accepted value they will be notified
                 if (minute < 0 || minute > 59) {
-                    if(minute != NO_INPUT){
+                    if(minute != NO_INPUT){ // if the user entered an integer but it was incorrect
                         System.out.println("Invalid input: Minute = " + minute);
                     }
                     System.out.println("Please enter a valid minute between 0 and 59");
