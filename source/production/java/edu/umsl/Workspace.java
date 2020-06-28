@@ -27,93 +27,120 @@ import java.util.Scanner;
 *
 *
 * */
-public class Workspace {
 
+
+public class Workspace {
     //Main Method
     public static void main(String[] args){
-        Scanner userInput = new Scanner (System.in);                                                                    //new scanner object
-
+        //First message to User
         System.out.println("Enter the Time You need to get out of Bed\nEnter the Hour and Minutes separated by a space");
         System.out.println("Hours: 0 to 23, Minutes: 0 to 59");
 
-        final int NO_INPUT = -9999;
-        int hour = NO_INPUT;                                                                                            //used to store the hour input by the user
-        int minute = NO_INPUT;                                                                                          //used to store the minute input by the user
-        String errorCatcher;                                                                                            //used to store store the users incorrect input
-        //This do while loop is used to catch input from the user outside the accepted range
+        //Variable Declaration and initialization
+        int [] time = new int[2];                   // Array of integers used to store the time: time[0] = hours , time[1] = minutes
+        String [] hourError = {""};                 // Array of Strings used to store the invalid input for hours as a string
+        String [] minuteError = {""};               // Array of Strings used to store the invalid input for minutes as a string
+        boolean valid;                      // boolean used to continue the do-while loop till true
+
+        //This do-while loop is used to keep asking the user for input till integers are correctly entered;
         do {
-
-            // This if statement is used to get input from the user if the last value input is outside the accepted range
-            if(hour < 0 || hour > 24) {
-                // this try catch block is used to catch exceptions thrown if the user inputs invalid data
-                try {
-                    hour = userInput.nextInt();                                                                         //accepts input from the user
-                } catch (InputMismatchException ex) {
-                    errorCatcher = userInput.next();
-                    System.out.println("Error: " + ex + "\nInvalid Input: Hour = " + errorCatcher);
-                }
-            }
-            //// This if statement is used to get input from the user if the last value input is outside the accepted range
-            if(minute < 0 || minute > 59) {
-                // this try catch block is used to catch exceptions thrown if the user inputs invalid data
-                try {
-                    minute = userInput.nextInt();                                                                       //accepts input from the user
-                } catch (InputMismatchException ex) {
-                    errorCatcher = userInput.next();
-                    System.out.println("Error: " + ex + "\nInvalid Input: Minute = " + errorCatcher);
-                }
-            }
-
-            // if both the hours and minutes were input incorrectly the user is notified of the mistake
-            if((hour < 0 || hour > 24) && (minute < 0 || minute > 59)){
-                if(hour != NO_INPUT && minute != NO_INPUT){ // if the user entered an integer but it was incorrect
-                    System.out.println("Invalid input: Hour = " + hour + " Minute = " + minute );
-                }
-                System.out.println("Please enter a valid Hour between 0 and 23\nPlease enter a valid Minute between 0 and 59");
-            }else{// if the user only made one mistake in their input this else statement will execute
-                //if the user entered a hour outside the accepted value they will be notified
-                if (hour < 0 || hour > 24 ) {
-                    if( hour != NO_INPUT){ // if the user entered an integer but it was incorrect
-                        System.out.println("Invalid input: Hour = " + hour);
-                    }
-                    System.out.println("Please enter a valid hour between 0 and 23");
-                }
-                //if the user entered a minute outside the accepted value they will be notified
-                if (minute < 0 || minute > 59) {
-                    if(minute != NO_INPUT){ // if the user entered an integer but it was incorrect
-                        System.out.println("Invalid input: Minute = " + minute);
-                    }
-                    System.out.println("Please enter a valid minute between 0 and 59");
-                }
-            }
-        }while((hour < 0 || hour >= 24) || (minute < 0 || minute > 59));
-
+            valid = inputTime(time, hourError, minuteError);
+            displayErrorMessages(valid,hourError,minuteError);
+        }while(!valid);
         //call the the newAlarmTime Method
-        newAlarmTime(hour,minute);
+        newAlarmTime(time);
     }
-    // newAlarmTime Method: Method used to calculate and display the new alarm time
-    public static void newAlarmTime(int hour, int minute){
 
-        if(minute < 45){
-            minute = minute + 15;
-            hour--;
-            if(hour < 0){
-                hour = 23;
+    // Method used to accept user input and check if input is the correct data type, then the method calls on the timeCheck method to check for valid input
+    public static boolean inputTime(int[] time, String[] hourError, String[] minuteError){
+        Scanner userInput = new Scanner (System.in);    // new scanner class object named userInput
+        int hour;                                       // used to store the users input for hours
+        int minute;                                     // used to store the users input for minutes
+
+        //try-catch block used to catch InputMismatchExceptions if the user doesn't enter a integer
+        try {
+            hour = userInput.nextInt();                 // user inputs hours
+            minute = userInput.nextInt();               // user inputs minutes
+        }catch (InputMismatchException ex) {
+            userInput.nextLine();                       // if the input is incorrect the scanner class will accept it as a string to clear the input buffer
+            System.out.println("Error: " + ex);         // displays error message to user about the exception
+            return false;
+        }
+
+        // if-else statements used to either return error messages and a boolean false to the main method or the users input time and a boolean true
+        if(timeCheck(hour,minute,hourError,minuteError)){
+            time[0] = hour;
+            time[1] = minute;
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    //Method used to check if user input is within a correct range of values
+    public static boolean timeCheck(int hour, int minute, String[] hourError, String[] minuteError){
+        //if both the hours and minutes input by the user are out of the accepted range their corresponding error string will store the invalid input
+        if((hour < 0 || hour > 23) && (minute < 0 || minute > 59)){
+            hourError[0] = hour + "";
+            minuteError[0] = minute + "";
+            return false;
+        }
+        //if the user input an hour out of the accepted range the hourError string will store the invalid input
+        if(hour < 0 || hour > 23){
+            hourError[0] = hour + "";
+            return false;
+        }
+        //if the user input for minutes is out of the accepted range the minuteError string will store the invalid input
+        if(minute < 0 || minute > 59){
+            minuteError[0] = minute + "";
+            return false;
+        }
+        return true;
+    }
+
+    //Method used to display unique error messages to the user depending on their input
+    public static void displayErrorMessages(boolean userError, String[] hourError, String[] minuteError){
+        // if the user input an invalid int for hours, the invalid input will be displayed here
+        if(hourError[0].length() > 0){
+            System.out.println("Invalid input: Hour = " + hourError[0]);
+            hourError[0]="";
+        }
+        // if the user input a invalid int for minutes the invalid input will display here
+        if(minuteError[0].length() > 0){
+            System.out.println("Invalid input: Minute = " + minuteError[0]);
+            minuteError[0]="";
+        }
+        // if the user input any invalid data the user will be asked to input valid integers for the time
+        if(!userError){
+            System.out.println("\nTRY AGAIN\n");
+            System.out.println("Enter the Hour and Minutes separated by a space");
+            System.out.println("Hours: 0 to 23, Minutes: 0 to 59");
+        }
+    }
+
+    // newAlarmTime Method: Method used to calculate and display the new alarm time
+    public static void newAlarmTime(int[] time){
+
+        if(time[1] < 45){
+            time[1] = time[1] + 15;
+            time[0]--;
+            if(time[0] < 0){
+                time[0] = 23;
             }
         }else{
-            minute = minute - 45;
+            time[1] = time[1] - 45;
         }
 
         //used to format output to the user
-        if(hour < 10){
-            System.out.print("Your New Alarm Time is: 0" + hour);
+        if(time[0] < 10){
+            System.out.print("Your New Alarm Time is: 0" + time[0]);
         }else{
-            System.out.print("Your New Alarm Time is: " + hour);
+            System.out.print("Your New Alarm Time is: " + time[0]);
         }
-        if(minute < 10){
-            System.out.println(":0" + minute);
+        if(time[1] < 10){
+            System.out.println(":0" + time[1]);
         }else{
-            System.out.println(":" + minute);
+            System.out.println(":" + time[1]);
         }
 
     }
